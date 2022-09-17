@@ -10,9 +10,18 @@ import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 
+/**
+ * @author - ROHIT PARIDA
+ */
 @Log4j2
 public class CustomErrorDecoder implements ErrorDecoder
 {
+    /**
+     *
+     * @param methodKey
+     * @param response
+     * @return
+     */
     @Override
     public Exception decode(String methodKey, Response response)
     {
