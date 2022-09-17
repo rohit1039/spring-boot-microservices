@@ -25,6 +25,11 @@ public class ProductController
     @Autowired
     private ProductService productService;
 
+    /**
+     *
+     * @param productDTO
+     * @return
+     */
     @PostMapping("/add")
     public ResponseEntity<EntityModel<ProductDTO>> addProduct(@Valid @RequestBody ProductDTO productDTO)
     {
@@ -35,6 +40,10 @@ public class ProductController
         return new ResponseEntity<>(entityModel, HttpStatus.CREATED);
     }
 
+    /**
+     *
+     * @return
+     */
     @GetMapping("/get-all")
     public ResponseEntity<List<ProductDTO>> getAllProducts()
     {
@@ -43,6 +52,11 @@ public class ProductController
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+    /**
+     *
+     * @param productId
+     * @return
+     */
     @GetMapping("{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable(name = "id") Long productId)
     {
