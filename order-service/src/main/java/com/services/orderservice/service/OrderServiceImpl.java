@@ -5,6 +5,7 @@ import com.services.orderservice.entity.Order;
 import com.services.orderservice.entity.OrderStatus;
 import com.services.orderservice.entity.PaymentMode;
 import com.services.orderservice.model.OrderDTO;
+import com.services.orderservice.proxy.ProductService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class OrderServiceImpl implements OrderService
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private ProductService productService;
+
     /**
      *
      * @param orderDTO
@@ -33,6 +37,9 @@ public class OrderServiceImpl implements OrderService
     {
         OrderDTO dto = new OrderDTO();
 
+        productService.reduceQuantity(Id, orderDTO.getQuantity());
+
+        log.info("Placing Order with status: {}", OrderStatus.ORDERED);
         Order order = Order
             .builder()
             .orderDate(LocalDateTime.now())
@@ -44,7 +51,6 @@ public class OrderServiceImpl implements OrderService
             .quantity(orderDTO.getQuantity())
             .build();
 
-        log.info("Placing Order: {}", order);
         order = this.orderRepository.save(order);
         log.info("Order placed successfully!");
         BeanUtils.copyProperties(order, dto);

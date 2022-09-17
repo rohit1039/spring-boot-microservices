@@ -28,4 +28,6 @@ public interface ProductService
      * @return
      */
     public ProductDTO getProductById(Long productId);
+
+    public ProductDTO reduceQuantity(Long productId, Long quantity);
 }

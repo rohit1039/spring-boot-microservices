@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.ws.rs.Path;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -57,12 +58,20 @@ public class ProductController
      * @param productId
      * @return
      */
-    @GetMapping("{id}")
-    public ResponseEntity<ProductDTO> getProductById(@PathVariable(name = "id") Long productId)
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long productId)
     {
         ProductDTO productDTO = this.productService.getProductById(productId);
 
         return new ResponseEntity<>(productDTO, HttpStatus.OK);
+    }
+
+    @PutMapping("/reduce-quantity/{productId}")
+    public ResponseEntity<ProductDTO> reduceQuantity(@PathVariable Long productId,@RequestParam Long quantity)
+    {
+        ProductDTO productDTO = this.productService.reduceQuantity(productId,quantity);
+
+        return new ResponseEntity<>(productDTO,HttpStatus.OK);
     }
 }
 

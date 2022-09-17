@@ -39,7 +39,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
             .errorCode(ex.getErrorCode())
             .build();
 
-        return new ResponseEntity<>(exceptionInResponse, HttpStatus.NOT_FOUND);
+        if(ex.getErrorCode().equalsIgnoreCase("PRODUCT_NOT_FOUND"))
+        {
+            return new ResponseEntity<>(exceptionInResponse, HttpStatus.NOT_FOUND);
+        }
+        else
+        {
+            return new ResponseEntity<>(exceptionInResponse, HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**

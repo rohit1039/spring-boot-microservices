@@ -26,7 +26,6 @@ public class ProductServiceImpl implements ProductService
     private ModelMapper modelMapper;
 
     /**
-     *
      * @param productDTO
      * @return
      */
@@ -42,7 +41,6 @@ public class ProductServiceImpl implements ProductService
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -56,7 +54,6 @@ public class ProductServiceImpl implements ProductService
     }
 
     /**
-     *
      * @param productId
      * @return
      */
@@ -69,5 +66,26 @@ public class ProductServiceImpl implements ProductService
                 new ProductServiceCustomException("No product found with ID: " + productId, "PRODUCT_NOT_FOUND")
             ));
         return this.modelMapper.map(product, ProductDTO.class);
+    }
+
+    @Override
+    public ProductDTO reduceQuantity(Long productId, Long quantity)
+    {
+        Product product = this.productRepository.findById(productId).orElseThrow(() ->
+            (
+                new ProductServiceCustomException("Product not found with ID: " + productId, "PRODUCT_NOT_FOUND")
+            ));
+
+        if (product.getQuantity() < quantity || quantity<0)
+        {
+            throw new ProductServiceCustomException("Quantity must be equals to or less than original quantity!", "INSUFFICIENT_QUANTITY");
+        }
+
+        long updatedQuantity = product.getQuantity() - quantity;
+        product.setQuantity(updatedQuantity);
+        ProductDTO productDTO = this.modelMapper.map(this.productRepository.save(product), ProductDTO.class);
+        log.info("Product quantity updated successfully!");
+
+        return productDTO;
     }
 }
