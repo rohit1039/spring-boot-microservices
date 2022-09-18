@@ -39,12 +39,12 @@ public class OrderServiceImpl implements OrderService
 
         productService.reduceQuantity(Id, orderDTO.getQuantity());
 
-        log.info("Placing Order with status: {}", OrderStatus.ORDERED);
+        log.info("Placing Order with status: {}", OrderStatus.ORDER_COMPLETED);
         Order order = Order
             .builder()
             .orderDate(LocalDateTime.now())
             .price(orderDTO.getPrice())
-            .orderStatus(OrderStatus.ORDERED)
+            .orderStatus(OrderStatus.ORDER_COMPLETED)
             .paymentMode(PaymentMode.CASH_ON_DELIVERY)
             .totalAmount(orderDTO.getTotalAmount())
             .productId(Id)

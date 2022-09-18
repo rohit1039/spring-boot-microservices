@@ -20,6 +20,10 @@ spring:
   config:
     import: configserver:http://localhost:9296
 
+product:
+  service:
+    url: http://localhost:8080
+    name: PRODUCT-SERVICE
 #eureka:
 #  instance:
 #    prefer-ip-address: true

@@ -5,5 +5,5 @@ package com.services.orderservice.entity;
  */
 public enum OrderStatus
 {
-    ORDERED, CANCELLED;
+    ORDER_COMPLETED, ORDER_CANCELLED;
 }

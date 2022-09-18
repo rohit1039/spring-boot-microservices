@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
-@FeignClient(name = "PRODUCT-SERVICE/product")
+@FeignClient(url = "${product.service.url}", name = "${product.service.name}")
 public interface ProductService
 {
-    @PutMapping("/reduce-quantity/{productId}")
+    @PutMapping("/product/reduce-quantity/{productId}")
     ResponseEntity<Object> reduceQuantity(@PathVariable Long productId, @RequestParam Long quantity);
 }
