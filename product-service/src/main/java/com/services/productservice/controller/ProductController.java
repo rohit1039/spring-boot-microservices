@@ -10,15 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.ws.rs.Path;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-/**
- * @author - ROHIT PARIDA
- */
 @RestController
 @RequestMapping("/product")
 public class ProductController
@@ -26,11 +22,6 @@ public class ProductController
     @Autowired
     private ProductService productService;
 
-    /**
-     *
-     * @param productDTO
-     * @return
-     */
     @PostMapping("/add")
     public ResponseEntity<EntityModel<ProductDTO>> addProduct(@Valid @RequestBody ProductDTO productDTO)
     {
@@ -41,10 +32,6 @@ public class ProductController
         return new ResponseEntity<>(entityModel, HttpStatus.CREATED);
     }
 
-    /**
-     *
-     * @return
-     */
     @GetMapping("/get-all")
     public ResponseEntity<List<ProductDTO>> getAllProducts()
     {
@@ -53,11 +40,6 @@ public class ProductController
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    /**
-     *
-     * @param productId
-     * @return
-     */
     @GetMapping("/{productId}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable Long productId)
     {
@@ -67,11 +49,11 @@ public class ProductController
     }
 
     @PutMapping("/reduce-quantity/{productId}")
-    public ResponseEntity<ProductDTO> reduceQuantity(@PathVariable Long productId,@RequestParam Long quantity)
+    public ResponseEntity<ProductDTO> reduceQuantity(@PathVariable Long productId, @RequestParam Long quantity)
     {
-        ProductDTO productDTO = this.productService.reduceQuantity(productId,quantity);
+        ProductDTO productDTO = this.productService.reduceQuantity(productId, quantity);
 
-        return new ResponseEntity<>(productDTO,HttpStatus.OK);
+        return new ResponseEntity<>(productDTO, HttpStatus.OK);
     }
 }
 

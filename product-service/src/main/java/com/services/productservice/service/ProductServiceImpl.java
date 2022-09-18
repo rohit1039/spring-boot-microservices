@@ -12,9 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * @author - ROHIT PARIDA
- */
 @Service
 @Log4j2
 public class ProductServiceImpl implements ProductService
@@ -25,10 +22,6 @@ public class ProductServiceImpl implements ProductService
     @Autowired
     private ModelMapper modelMapper;
 
-    /**
-     * @param productDTO
-     * @return
-     */
     @Override
     public ProductDTO addProduct(ProductDTO productDTO)
     {
@@ -40,9 +33,6 @@ public class ProductServiceImpl implements ProductService
         return dto;
     }
 
-    /**
-     * @return
-     */
     @Override
     public List<ProductDTO> getProducts()
     {
@@ -53,10 +43,6 @@ public class ProductServiceImpl implements ProductService
         return allProducts;
     }
 
-    /**
-     * @param productId
-     * @return
-     */
     @Override
     public ProductDTO getProductById(Long productId)
     {
@@ -76,7 +62,7 @@ public class ProductServiceImpl implements ProductService
                 new ProductServiceCustomException("Product not found with ID: " + productId, "PRODUCT_NOT_FOUND")
             ));
 
-        if (product.getQuantity() < quantity || quantity<0)
+        if (product.getQuantity() < quantity || quantity < 0)
         {
             throw new ProductServiceCustomException("Quantity must be equals to or less than original quantity!", "INSUFFICIENT_QUANTITY");
         }

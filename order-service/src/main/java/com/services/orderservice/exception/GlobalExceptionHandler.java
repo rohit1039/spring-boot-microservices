@@ -15,18 +15,10 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * @author - ROHIT PARIDA
- */
 @RestControllerAdvice
 @Log4j2
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
 {
-    /**
-     * @param ex
-     * @param request
-     * @return
-     */
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ErrorResponse> handleException(CustomException ex, WebRequest request)
     {
@@ -41,13 +33,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(exceptionInResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    /**
-     * @param exception
-     * @param headers
-     * @param status
-     * @param request
-     * @return
-     */
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request)
     {

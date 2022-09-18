@@ -7,9 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-/**
- * @author - ROHIT PARIDA
- */
 @Entity
 @Table(name = "product")
 @Data

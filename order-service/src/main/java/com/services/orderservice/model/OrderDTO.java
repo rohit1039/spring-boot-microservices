@@ -11,9 +11,6 @@ import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-/**
- * @author - ROHIT PARIDA
- */
 @Data
 @Builder
 @AllArgsConstructor

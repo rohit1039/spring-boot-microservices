@@ -1,8 +1,5 @@
 package com.services.orderservice.entity;
 
-/**
- * @author - ROHIT PARIDA
- */
 public enum PaymentMode
 {
     CASH_ON_DELIVERY,

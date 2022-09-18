@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @FeignClient(url = "${product.service.url}", name = "${product.service.name}")
 public interface ProductService
 {

@@ -9,9 +9,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-/**
- * @author - ROHIT PARIDA
- */
 @Entity
 @Table(name = "orders")
 @Data

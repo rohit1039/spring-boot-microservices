@@ -13,9 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
-/**
- * @author - ROHIT PARIDA
- */
 @Service
 @Log4j2
 public class OrderServiceImpl implements OrderService
@@ -26,12 +23,6 @@ public class OrderServiceImpl implements OrderService
     @Autowired
     private ProductService productService;
 
-    /**
-     *
-     * @param orderDTO
-     * @param Id
-     * @return
-     */
     @Override
     public OrderDTO orderNow(OrderDTO orderDTO, Long Id)
     {
@@ -40,6 +31,7 @@ public class OrderServiceImpl implements OrderService
         productService.reduceQuantity(Id, orderDTO.getQuantity());
 
         log.info("Placing Order with status: {}", OrderStatus.ORDER_COMPLETED);
+
         Order order = Order
             .builder()
             .orderDate(LocalDateTime.now())
