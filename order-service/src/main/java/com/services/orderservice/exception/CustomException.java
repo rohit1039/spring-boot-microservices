@@ -6,12 +6,11 @@ import lombok.Data;
 public class CustomException extends RuntimeException
 {
     private String errorCode;
-    private int statusCode;
+    private int status;
 
-    public CustomException(String errorMessage, String errorCode, int statusCode)
-    {
-        super(errorMessage);
+    public CustomException(String message, String errorCode, int status) {
+        super(message);
         this.errorCode = errorCode;
-        this.statusCode = statusCode;
+        this.status = status;
     }
 }

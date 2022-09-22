@@ -24,7 +24,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
     {
         ExceptionInResponse exceptionInResponse = ExceptionInResponse
             .builder()
-            .timestamp(LocalDateTime.now())
             .description(request.getDescription(false))
             .errorMessage(ex.getMessage())
             .errorCode(ex.getErrorCode())

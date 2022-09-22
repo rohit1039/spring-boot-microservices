@@ -2,11 +2,12 @@ package com.services.orderservice.proxy.decoder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.services.orderservice.exception.CustomException;
-import com.services.orderservice.exception.ErrorResponse;
+import com.services.orderservice.exception.ExceptionInResponse;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
@@ -21,15 +22,19 @@ public class CustomErrorDecoder implements ErrorDecoder
         log.info("::{}", response.request().url());
         log.info("::{}", response.request().headers());
 
-        try
-        {
-            ErrorResponse errorResponse = objectMapper.readValue(response.body().asInputStream(), ErrorResponse.class);
+        try {
+            ExceptionInResponse errorResponse
+                = objectMapper.readValue(response.body().asInputStream(),
+                ExceptionInResponse.class);
 
-            return new CustomException(errorResponse.getErrorMessage(), errorResponse.getErrorCode(), response.status());
+            return new CustomException(errorResponse.getErrorMessage() ,
+                errorResponse.getErrorCode(),
+                response.status());
 
-        } catch (IOException e)
-        {
-            return new CustomException("Something went wrong on the server!", "INTERNAL_SERVER_ERROR", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        } catch (IOException e) {
+            throw  new CustomException("Internal Server Error",
+                "INTERNAL_SERVER_ERROR",
+                500);
         }
     }
 }

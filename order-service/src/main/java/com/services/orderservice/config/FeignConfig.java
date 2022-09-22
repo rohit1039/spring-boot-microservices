@@ -6,11 +6,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class FeignConfig
-{
+public class FeignConfig {
     @Bean
-    public ErrorDecoder errorDecoder()
-    {
+    public ErrorDecoder errorDecoder() {
         return new CustomErrorDecoder();
     }
 }

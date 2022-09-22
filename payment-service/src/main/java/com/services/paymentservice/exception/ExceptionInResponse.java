@@ -1,20 +1,17 @@
-package com.services.orderservice.exception;
+package com.services.paymentservice.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ErrorResponse
+public class ExceptionInResponse
 {
-    private LocalDateTime timestamp;
     private String errorMessage;
     private String errorCode;
-    private int statusCode;
+    private String description;
 }

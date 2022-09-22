@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -20,17 +19,16 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
 {
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ErrorResponse> handleException(CustomException ex, WebRequest request)
+    public ResponseEntity<ExceptionInResponse> handleException(CustomException ex, WebRequest request)
     {
-        ErrorResponse exceptionInResponse = ErrorResponse
+        ExceptionInResponse exceptionInResponse = ExceptionInResponse
             .builder()
-            .timestamp(LocalDateTime.now())
+            .description(request.getDescription(false))
             .errorMessage(ex.getMessage())
             .errorCode(ex.getErrorCode())
-            .statusCode(ex.getStatusCode())
             .build();
 
-        return new ResponseEntity<>(exceptionInResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(exceptionInResponse, HttpStatus.valueOf(ex.getStatus()));
     }
 
     @Override

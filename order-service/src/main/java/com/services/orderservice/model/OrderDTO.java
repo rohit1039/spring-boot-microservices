@@ -2,6 +2,8 @@ package com.services.orderservice.model;
 
 import com.services.orderservice.entity.OrderStatus;
 import com.services.orderservice.entity.PaymentMode;
+import com.services.orderservice.proxy.model.ProductDTO;
+import com.services.orderservice.proxy.model.TransactionDetails;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,4 +28,6 @@ public class OrderDTO
     private OrderStatus orderStatus;
     private PaymentMode paymentMode;
     private double totalAmount;
+    private ProductDTO productDTO;
+    private TransactionDetails transactionDetails;
 }

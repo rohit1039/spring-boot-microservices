@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Builder
 public class ExceptionInResponse
 {
-    private LocalDateTime timestamp;
     private String errorMessage;
     private String errorCode;
     private String description;

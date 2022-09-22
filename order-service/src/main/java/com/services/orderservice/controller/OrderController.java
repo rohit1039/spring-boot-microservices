@@ -9,21 +9,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.ws.rs.Path;
 
 @RestController
 @RequestMapping("/order")
 @Log4j2
-public class OrderController
-{
+public class OrderController {
     @Autowired
     private OrderService orderService;
 
     @PostMapping("/product/{productId}")
-    public ResponseEntity<OrderDTO> placeOrder(@Valid @RequestBody OrderDTO orderDTO, @PathVariable("productId") Long Id)
-    {
+    public ResponseEntity<OrderDTO> placeOrder(@Valid @RequestBody OrderDTO orderDTO, @PathVariable("productId") Long Id) {
         log.info("Inside placeOrder method...");
         OrderDTO dto = this.orderService.orderNow(orderDTO, Id);
 
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/get/{orderId}")
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long orderId)
+    {
+        log.info("Inside getOrderById method");
+        OrderDTO dto = this.orderService.getOrderById(orderId);
+
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 }
