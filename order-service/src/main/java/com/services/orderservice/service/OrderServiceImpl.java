@@ -43,9 +43,10 @@ public class OrderServiceImpl implements OrderService
         OrderDTO dto = new OrderDTO();
 
         log.info("Calling Product Service...");
+
         productService.reduceQuantity(Id, orderDTO.getQuantity());
 
-        log.info("Placing Order with status: {}", OrderStatus.ORDER_PLACED);
+        log.info("Placing Order with status: {}", OrderStatus.ORDER_CREATED);
 
         Order order = Order
                 .builder()
@@ -71,6 +72,7 @@ public class OrderServiceImpl implements OrderService
         {
             this.paymentService.doPayment(transactionDetails);
             log.info("Transaction done successfully");
+            log.info("Order status updated: {}",OrderStatus.ORDER_PLACED);
             order.setOrderStatus(OrderStatus.ORDER_PLACED);
         } catch (Exception e)
         {

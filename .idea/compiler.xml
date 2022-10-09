@@ -16,12 +16,12 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="cloud-api-gateway" target="17" />
-      <module name="config-server" target="17" />
-      <module name="order-service" target="17" />
-      <module name="payment-service" target="17" />
-      <module name="product-service" target="17" />
-      <module name="service-registry" target="17" />
+      <module name="cloud-api-gateway" target="18" />
+      <module name="config-server" target="18" />
+      <module name="order-service" target="18" />
+      <module name="payment-service" target="18" />
+      <module name="product-service" target="18" />
+      <module name="service-registry" target="18" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

@@ -7,6 +7,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,6 +23,7 @@ public class ProductController
     @Autowired
     private ProductService productService;
 
+    @PreAuthorize("hasAuthority('Admin')")
     @PostMapping("/add")
     public ResponseEntity<EntityModel<ProductDTO>> addProduct(@Valid @RequestBody ProductDTO productDTO)
     {
@@ -32,6 +34,7 @@ public class ProductController
         return new ResponseEntity<>(entityModel, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('Admin') || hasAuthority('Customer') || hasAuthority('SCOPE_internal')")
     @GetMapping("/get-all")
     public ResponseEntity<List<ProductDTO>> getAllProducts()
     {
@@ -40,6 +43,7 @@ public class ProductController
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('Admin') || hasAuthority('Customer') || hasAuthority('SCOPE_internal')")
     @GetMapping("/{productId}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable Long productId)
     {
@@ -48,12 +52,15 @@ public class ProductController
         return new ResponseEntity<>(productDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('Admin') || hasAuthority('Customer') || hasAuthority('SCOPE_internal')")
     @PutMapping("/reduce-quantity/{productId}")
-    public ResponseEntity<ProductDTO> reduceQuantity(@PathVariable Long productId, @RequestParam Long quantity)
+    public ResponseEntity<EntityModel<ProductDTO>> reduceQuantity(@PathVariable Long productId, @RequestParam Long quantity)
     {
-        ProductDTO productDTO = this.productService.reduceQuantity(productId, quantity);
+        EntityModel<ProductDTO> entityModel = EntityModel.of(this.productService.reduceQuantity(productId,quantity));
+        WebMvcLinkBuilder linkBuilder = linkTo(methodOn(this.getClass()).getAllProducts());
+        entityModel.add(linkBuilder.withRel("get-all-products"));
 
-        return new ResponseEntity<>(productDTO, HttpStatus.OK);
+        return new ResponseEntity<>(entityModel, HttpStatus.OK);
     }
 }
 

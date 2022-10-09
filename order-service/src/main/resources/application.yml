@@ -20,6 +20,25 @@ spring:
   config:
     import: configserver:http://localhost:9296
 
+# OAuth2 Config
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-40093102.okta.com/oauth2/default
+      client:
+        registration:
+          internal-client:
+            provider: okta
+            authorization-grant-type: client_credentials
+            scope: internal
+            client-id: 0oa6rgp997HGkYeFp5d7
+            client-secret: QP5ndwrapPIntx5vFgip7QUTmLt4N4qGSnZCSBoj
+
+        provider:
+          okta:
+            issuer-uri: https://dev-40093102.okta.com/oauth2/default
+
 resilience:
   circuitbreaker:
     instances:
@@ -32,7 +51,6 @@ resilience:
         permitted-number-of-calls-in-half-open-state: 3
         sliding-window-size: 10
         sliding-window-type: COUNT_BASED
-
 
 # Product Service Config
 product:

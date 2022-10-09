@@ -14,7 +14,7 @@
 	<name>config-server</name>
 	<description>Config Server to handle repetitive configurations</description>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>18</java.version>
 		<spring-cloud.version>2021.0.4</spring-cloud.version>
 	</properties>
 	<dependencies>

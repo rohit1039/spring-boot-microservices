@@ -27,10 +27,9 @@ public class CloudApiGatewayApplication
     @Bean
     public Customizer<Resilience4JCircuitBreakerFactory> defaultCustomizer()
     {
-        return factory -> factory.configureDefault
-                (
-                        id -> new Resilience4JConfigBuilder(id)
-                                .circuitBreakerConfig(CircuitBreakerConfig.ofDefaults()).build()
-                );
+        return factory -> factory.configureDefault(
+                id -> new Resilience4JConfigBuilder(id)
+                        .circuitBreakerConfig(CircuitBreakerConfig.ofDefaults()).build()
+        );
     }
 }

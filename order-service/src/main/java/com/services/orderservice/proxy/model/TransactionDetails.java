@@ -16,13 +16,10 @@ import java.time.Instant;
 public class TransactionDetails
 {
     private Long paymentId;
-    @JsonIgnore
     private Long orderId;
-    @JsonIgnore
     private PaymentMode paymentMode;
     private String referenceNumber;
     private Instant paymentDate;
     private String paymentStatus;
-    @JsonIgnore
     private Double totalAmount;
 }

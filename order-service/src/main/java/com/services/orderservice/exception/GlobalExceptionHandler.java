@@ -8,6 +8,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -22,13 +24,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
     public ResponseEntity<ExceptionInResponse> handleException(CustomException ex, WebRequest request)
     {
         ExceptionInResponse exceptionInResponse = ExceptionInResponse
-            .builder()
-            .description(request.getDescription(false))
-            .errorMessage(ex.getMessage())
-            .errorCode(ex.getErrorCode())
-            .build();
+                .builder()
+                .description(request.getDescription(false))
+                .errorMessage(ex.getMessage())
+                .errorCode(ex.getErrorCode())
+                .build();
 
-            return new ResponseEntity<>(exceptionInResponse, HttpStatus.valueOf(ex.getStatus()));
+        return new ResponseEntity<>(exceptionInResponse, HttpStatus.valueOf(ex.getStatus()));
     }
 
     @Override
