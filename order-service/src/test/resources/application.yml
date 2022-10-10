@@ -1,0 +1,54 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:orderdb
+    username: rp
+    password: password
+    driverClassName: org.h2.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  application:
+    name: ORDER-SERVICE
+
+  config:
+    import: optional:configserver:http://localhost:9296
+
+# OAuth2 Config
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-40093102.okta.com/oauth2/default
+      client:
+        registration:
+          internal-client:
+            provider: okta
+            authorization-grant-type: client_credentials
+            scope: internal
+            client-id: 0oa6rgp997HGkYeFp5d7
+            client-secret: QP5ndwrapPIntx5vFgip7QUTmLt4N4qGSnZCSBoj
+
+        provider:
+          okta:
+            issuer-uri: https://dev-40093102.okta.com/oauth2/default
+
+# Product Service Config
+product:
+  service:
+    url: http://localhost:8080
+    name: PRODUCT-SERVICE
+
+# Payment Service Config
+payment:
+  service:
+    url: http://localhost:8082
+    name: PAYMENT-SERVICE
+
+# Disable Eureka Client
+eureka:
+  client:
+    enabled: false

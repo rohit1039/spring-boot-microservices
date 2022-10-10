@@ -5,14 +5,13 @@ import com.services.orderservice.entity.Order;
 import com.services.orderservice.entity.OrderStatus;
 import com.services.orderservice.entity.PaymentMode;
 import com.services.orderservice.exception.CustomException;
-import com.services.orderservice.exception.ExceptionInResponse;
 import com.services.orderservice.model.OrderDTO;
 import com.services.orderservice.proxy.model.ProductDTO;
 import com.services.orderservice.proxy.model.TransactionDetails;
 import com.services.orderservice.proxy.service.PaymentService;
 import com.services.orderservice.proxy.service.ProductService;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.BeanUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -37,14 +36,17 @@ public class OrderServiceImpl implements OrderService
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Override
-    public OrderDTO orderNow(OrderDTO orderDTO, Long Id)
+    public OrderDTO orderNow(OrderDTO orderDTO, Long productId)
     {
         OrderDTO dto = new OrderDTO();
 
         log.info("Calling Product Service...");
 
-        productService.reduceQuantity(Id, orderDTO.getQuantity());
+        productService.reduceQuantity(productId, orderDTO.getQuantity());
 
         log.info("Placing Order with status: {}", OrderStatus.ORDER_CREATED);
 
@@ -55,14 +57,16 @@ public class OrderServiceImpl implements OrderService
                 .orderStatus(OrderStatus.ORDER_CREATED)
                 .paymentMode(PaymentMode.CASH_ON_DELIVERY)
                 .totalAmount(orderDTO.getPrice() * orderDTO.getQuantity())
-                .productId(Id)
+                .productId(productId)
                 .quantity(orderDTO.getQuantity())
                 .build();
 
         order = this.orderRepository.save(order);
-        BeanUtils.copyProperties(order, dto);
+
+        this.modelMapper.map(order, dto);
 
         log.info("Calling Payment Service to complete the transaction...");
+
         TransactionDetails transactionDetails = TransactionDetails.builder()
                 .orderId(order.getId())
                 .referenceNumber(UUID.randomUUID().toString())
@@ -71,12 +75,17 @@ public class OrderServiceImpl implements OrderService
         try
         {
             this.paymentService.doPayment(transactionDetails);
+
             log.info("Transaction done successfully");
-            log.info("Order status updated: {}",OrderStatus.ORDER_PLACED);
+
+            log.info("Order status updated: {}", OrderStatus.ORDER_PLACED);
+
             order.setOrderStatus(OrderStatus.ORDER_PLACED);
+
         } catch (Exception e)
         {
             log.error("Transaction failed due to some error.Please try again!");
+
             order.setOrderStatus(OrderStatus.ORDER_FAILED);
         }
 
@@ -84,7 +93,8 @@ public class OrderServiceImpl implements OrderService
         order = this.orderRepository.save(order);
 
         log.info("Order placed successfully!");
-        BeanUtils.copyProperties(order, dto);
+
+        this.modelMapper.map(order, dto);
 
         return dto;
     }
@@ -105,6 +115,8 @@ public class OrderServiceImpl implements OrderService
         );
 
         OrderDTO setProductDetails = OrderDTO.builder().productDTO(ProductDTO.builder().productName(productDTO.getProductName()).productId(productDTO.getProductId()).build()).build();
+
+        log.info("Invoking payment service to fetch the transaction details...");
 
         TransactionDetails transactionDetails = restTemplate.getForObject(
                 "http://PAYMENT-SERVICE/payment/" + orderId, TransactionDetails.class

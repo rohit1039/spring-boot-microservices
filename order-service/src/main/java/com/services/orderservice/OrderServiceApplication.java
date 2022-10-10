@@ -2,6 +2,7 @@ package com.services.orderservice;
 
 import com.services.orderservice.proxy.exception.RestTemplateExceptionHandler;
 import com.services.orderservice.proxy.interceptor.RestTemplateInterceptor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -58,5 +59,11 @@ public class OrderServiceApplication
         restTemplate.setInterceptors(Arrays.asList(new RestTemplateInterceptor(oAuth2AuthorizedClientManager(clientRegistrationRepository, oAuth2AuthorizedClientRepository))));
         restTemplate.setErrorHandler(new RestTemplateExceptionHandler());
         return restTemplate;
+    }
+
+    @Bean
+    public ModelMapper modelMapper()
+    {
+        return new ModelMapper();
     }
 }
