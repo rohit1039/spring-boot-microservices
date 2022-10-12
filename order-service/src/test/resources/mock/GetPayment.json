@@ -1,0 +1,9 @@
+{
+  "paymentId": 1,
+  "orderId": 1,
+  "paymentMode": "CASH_ON_DELIVERY",
+  "referenceNumber": "e5ca0e51-d3c7-43e5-95f2-d8988eb69281",
+  "paymentDate": "2022-10-12T01:58:02.337560300Z",
+  "paymentStatus": "SUCCESS",
+  "totalAmount": 45000
+}
