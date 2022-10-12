@@ -9,7 +9,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -23,7 +22,6 @@ public class OrderDTO
     private Double price;
     @NotNull
     private long quantity;
-    @FutureOrPresent
     private LocalDateTime orderDate;
     private OrderStatus orderStatus;
     private PaymentMode paymentMode;

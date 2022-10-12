@@ -63,7 +63,7 @@ public class OrderServiceImpl implements OrderService
 
         order = this.orderRepository.save(order);
 
-        this.modelMapper.map(order, dto);
+        this.modelMapper.map(order, OrderDTO.class);
 
         log.info("Calling Payment Service to complete the transaction...");
 
@@ -78,21 +78,23 @@ public class OrderServiceImpl implements OrderService
 
             log.info("Transaction done successfully");
 
-            log.info("Order status updated: {}", OrderStatus.ORDER_PLACED);
-
             order.setOrderStatus(OrderStatus.ORDER_PLACED);
+
+            log.info("Order status updated: {}", order.getOrderStatus());
+
 
         } catch (Exception e)
         {
             log.error("Transaction failed due to some error.Please try again!");
 
             order.setOrderStatus(OrderStatus.ORDER_FAILED);
+
+            log.warn("Order status updated: {}", order.getOrderStatus());
         }
 
         order.setOrderStatus(order.getOrderStatus());
-        order = this.orderRepository.save(order);
 
-        log.info("Order placed successfully!");
+        order = this.orderRepository.save(order);
 
         this.modelMapper.map(order, dto);
 

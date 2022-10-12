@@ -6,9 +6,8 @@ import com.services.paymentservice.entity.PaymentMode;
 import com.services.paymentservice.exception.CustomException;
 import com.services.paymentservice.model.TransactionDetails;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.BeanUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +19,9 @@ public class PaymentServiceImpl implements PaymentService
 {
     @Autowired
     private PaymentRepository paymentRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public TransactionDetails doPayment(TransactionDetails transactionDetails)
@@ -38,7 +40,7 @@ public class PaymentServiceImpl implements PaymentService
 
         log.info("Transaction completed: {}", savePayment.getPaymentId());
 
-        BeanUtils.copyProperties(savePayment, TransactionDetails.class);
+        this.modelMapper.map(savePayment, TransactionDetails.class);
 
         return transactionDetails;
     }
@@ -46,13 +48,13 @@ public class PaymentServiceImpl implements PaymentService
     @Override
     public TransactionDetails getPaymentDetailsByOrderId(Long orderId)
     {
-        log.info("Getting payment details with orderID: {}",orderId);
+        log.info("Getting payment details with orderID: {}", orderId);
 
         Payment getPaymentDetails = this.paymentRepository.findByOrderId(orderId);
 
-        if(getPaymentDetails==null)
+        if (getPaymentDetails == null)
         {
-            throw new CustomException("Payment details not found with orderId: "+orderId,HttpStatus.BAD_REQUEST.toString(),400);
+            throw new CustomException("Payment details not found with orderId: " + orderId, HttpStatus.BAD_REQUEST.toString(), 400);
         }
 
         TransactionDetails transactionDetails = TransactionDetails.builder()
