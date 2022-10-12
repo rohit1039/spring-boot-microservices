@@ -95,7 +95,7 @@ public class OrderControllerTest
         wireMockServer.stubFor(get(urlMatching("/payment/.*")).willReturn(aResponse()
                 .withStatus(HttpStatus.OK.value())
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .withBody(copyToString(OrderControllerTest.class.getClassLoader().getResourceAsStream("/mock/GetPayment.json"),
+                .withBody(copyToString(OrderControllerTest.class.getClassLoader().getResourceAsStream("mock/GetPayment.json"),
                         defaultCharset()
                 ))));
     }
@@ -112,7 +112,7 @@ public class OrderControllerTest
         wireMockServer.stubFor(get("/product/1").willReturn(aResponse()
                 .withStatus(HttpStatus.OK.value())
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .withBody(copyToString(OrderControllerTest.class.getClassLoader().getResourceAsStream("/mock/GetProduct.json"),
+                .withBody(copyToString(OrderControllerTest.class.getClassLoader().getResourceAsStream("mock/GetProduct.json"),
                         defaultCharset()
                 ))));
     }
@@ -246,10 +246,10 @@ public class OrderControllerTest
     private OrderDTO getOrderResponse(Order order) throws IOException
     {
         OrderDTO transactionDetails = OrderDTO.builder().transactionDetails(objectMapper.readValue(
-                copyToString(OrderControllerTest.class.getClassLoader().getResourceAsStream("/mock/GetPayment.json"), defaultCharset()), TransactionDetails.class)).build();
+                copyToString(OrderControllerTest.class.getClassLoader().getResourceAsStream("mock/GetPayment.json"), defaultCharset()), TransactionDetails.class)).build();
 
         OrderDTO productDTO = OrderDTO.builder().productDTO(objectMapper.readValue(
-                copyToString(OrderControllerTest.class.getClassLoader().getResourceAsStream("/mock/GetProduct.json"), defaultCharset()).getBytes(), ProductDTO.class)).build();
+                copyToString(OrderControllerTest.class.getClassLoader().getResourceAsStream("mock/GetProduct.json"), defaultCharset()).getBytes(), ProductDTO.class)).build();
 
         OrderDTO response = OrderDTO.builder()
                 .id(order.getId())
