@@ -1,4 +1,4 @@
-package com.services.orderservice.proxy.service;
+package com.services.orderservice.proxy.client;
 
 import com.services.orderservice.exception.CustomException;
 import com.services.orderservice.proxy.model.TransactionDetails;

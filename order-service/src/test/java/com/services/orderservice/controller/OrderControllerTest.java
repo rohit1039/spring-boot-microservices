@@ -245,11 +245,13 @@ public class OrderControllerTest
 
     private OrderDTO getOrderResponse(Order order) throws IOException
     {
-        OrderDTO transactionDetails = OrderDTO.builder().transactionDetails(objectMapper.readValue(
-                copyToString(OrderControllerTest.class.getClassLoader().getResourceAsStream("mock/GetPayment.json"), defaultCharset()), TransactionDetails.class)).build();
+        OrderDTO transactionDetails = OrderDTO.builder().transactionDetails(objectMapper.readValue(copyToString
+                (OrderControllerTest.class.getClassLoader().getResourceAsStream("mock/GetPayment.json")
+                        , defaultCharset()), TransactionDetails.class)).build();
 
-        OrderDTO productDTO = OrderDTO.builder().productDTO(objectMapper.readValue(
-                copyToString(OrderControllerTest.class.getClassLoader().getResourceAsStream("mock/GetProduct.json"), defaultCharset()).getBytes(), ProductDTO.class)).build();
+        OrderDTO productDTO = OrderDTO.builder().productDTO(objectMapper.readValue(copyToString
+                (OrderControllerTest.class.getClassLoader().getResourceAsStream("mock/GetProduct.json"),
+                        defaultCharset()).getBytes(), ProductDTO.class)).build();
 
         OrderDTO response = OrderDTO.builder()
                 .id(order.getId())
