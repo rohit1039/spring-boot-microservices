@@ -53,14 +53,14 @@ resilience:
         sliding-window-type: COUNT_BASED
 
 # Product Service Config
-product:
-  service:
-    url: http://localhost:8080
-    name: PRODUCT-SERVICE
-
+#product:
+#  service:
+#    url: http://localhost:8080
+#    name: PRODUCT-SERVICE
+#
 # Payment Service Config
-payment:
-  service:
-    url: http://localhost:8082
-    name: PAYMENT-SERVICE
+#payment:
+#  service:
+#    url: http://localhost:8082
+#    name: PAYMENT-SERVICE
 

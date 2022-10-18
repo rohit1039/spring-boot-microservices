@@ -9,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-
 @RestController
 @RequestMapping("/order")
 @Log4j2
@@ -21,9 +19,10 @@ public class OrderController
 
     @PreAuthorize("hasAuthority('Customer')")
     @PostMapping("/product/{productId}")
-    public ResponseEntity<OrderDTO> placeOrder(@Valid @RequestBody OrderDTO orderDTO, @PathVariable("productId") Long Id)
+    public ResponseEntity<OrderDTO> placeOrder(@RequestBody OrderDTO orderDTO, @PathVariable("productId") Long Id)
     {
         log.info("Inside placeOrder method...");
+
         OrderDTO dto = this.orderService.orderNow(orderDTO, Id);
 
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
@@ -34,6 +33,7 @@ public class OrderController
     public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long orderId)
     {
         log.info("Inside getOrderById method");
+
         OrderDTO dto = this.orderService.getOrderById(orderId);
 
         return new ResponseEntity<>(dto, HttpStatus.OK);

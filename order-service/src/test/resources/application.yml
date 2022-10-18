@@ -1,7 +1,7 @@
 spring:
   datasource:
     url: jdbc:h2:mem:orderdb
-    username: rp
+    username: sa
     password: password
     driverClassName: org.h2.Driver
 
@@ -10,9 +10,6 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-
-  application:
-    name: ORDER-SERVICE
 
   config:
     import: optional:configserver:http://localhost:9296
@@ -36,17 +33,17 @@ spring:
           okta:
             issuer-uri: https://dev-40093102.okta.com/oauth2/default
 
-# Product Service Config
-product:
-  service:
-    url: http://localhost:8080
-    name: PRODUCT-SERVICE
-
-# Payment Service Config
-payment:
-  service:
-    url: http://localhost:8082
-    name: PAYMENT-SERVICE
+## Product Service Config
+#product:
+#  service:
+#    url: http://localhost:8080
+#    name: PRODUCT-SERVICE
+#
+## Payment Service Config
+#payment:
+#  service:
+#    url: http://localhost:8082
+#    name: PAYMENT-SERVICE
 
 # Disable Eureka Client
 eureka:

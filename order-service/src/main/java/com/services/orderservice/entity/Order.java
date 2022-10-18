@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
@@ -27,7 +28,7 @@ public class Order implements Serializable
     @Column(name = "quantity")
     private Long quantity;
     @Column(name = "orderDate")
-    private LocalDateTime orderDate;
+    private Instant orderDate;
     @Enumerated(EnumType.STRING)
     @Column(name = "orderStatus")
     private OrderStatus orderStatus;

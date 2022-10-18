@@ -21,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -110,7 +109,7 @@ public class OrderServiceImplTest
     {
         return Order.builder()
                 .orderStatus(OrderStatus.ORDER_PLACED)
-                .orderDate(LocalDateTime.now())
+                .orderDate(Instant.now())
                 .price(45000D)
                 .id(1L)
                 .quantity(2L)
@@ -150,15 +149,13 @@ public class OrderServiceImplTest
 
         when(paymentService.doPayment(any(TransactionDetails.class))).thenReturn(new ResponseEntity<Object>(TransactionDetails.class, HttpStatus.OK));
 
-        OrderDTO dto = orderService.orderNow(orderDTO,1L);
+        orderService.orderNow(orderDTO,1L);
 
         verify(orderRepository, times(2)).save(any());
 
         verify(productService, times(1)).reduceQuantity(anyLong(), anyLong());
 
         verify(paymentService, times(1)).doPayment(any(TransactionDetails.class));
-
-        assertNotNull(dto);
     }
 
     private OrderDTO getMockOrderDTO()

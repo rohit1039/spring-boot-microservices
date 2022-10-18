@@ -6,10 +6,10 @@ import com.services.orderservice.entity.OrderStatus;
 import com.services.orderservice.entity.PaymentMode;
 import com.services.orderservice.exception.CustomException;
 import com.services.orderservice.model.OrderDTO;
-import com.services.orderservice.proxy.model.ProductDTO;
-import com.services.orderservice.proxy.model.TransactionDetails;
 import com.services.orderservice.proxy.client.PaymentService;
 import com.services.orderservice.proxy.client.ProductService;
+import com.services.orderservice.proxy.model.ProductDTO;
+import com.services.orderservice.proxy.model.TransactionDetails;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Service
@@ -42,17 +42,14 @@ public class OrderServiceImpl implements OrderService
     @Override
     public OrderDTO orderNow(OrderDTO orderDTO, Long productId)
     {
-        OrderDTO dto = new OrderDTO();
-
         log.info("Calling Product Service...");
 
         productService.reduceQuantity(productId, orderDTO.getQuantity());
 
         log.info("Placing Order with status: {}", OrderStatus.ORDER_CREATED);
 
-        Order order = Order
-                .builder()
-                .orderDate(LocalDateTime.now())
+        Order order = Order.builder()
+                .orderDate(Instant.now())
                 .price(orderDTO.getPrice())
                 .orderStatus(OrderStatus.ORDER_CREATED)
                 .paymentMode(PaymentMode.CASH_ON_DELIVERY)
@@ -69,6 +66,8 @@ public class OrderServiceImpl implements OrderService
 
         TransactionDetails transactionDetails = TransactionDetails.builder()
                 .orderId(order.getId())
+                .paymentDate(Instant.now())
+                .paymentStatus("SUCCESS")
                 .referenceNumber(UUID.randomUUID().toString())
                 .paymentMode(PaymentMode.CASH_ON_DELIVERY)
                 .totalAmount(order.getTotalAmount()).build();
@@ -82,7 +81,6 @@ public class OrderServiceImpl implements OrderService
 
             log.info("Order status updated: {}", order.getOrderStatus());
 
-
         } catch (Exception e)
         {
             log.error("Transaction failed due to some error.Please try again!");
@@ -91,12 +89,11 @@ public class OrderServiceImpl implements OrderService
 
             log.warn("Order status updated: {}", order.getOrderStatus());
         }
-
         order.setOrderStatus(order.getOrderStatus());
 
         order = this.orderRepository.save(order);
 
-        this.modelMapper.map(order, dto);
+        OrderDTO dto = this.modelMapper.map(order, OrderDTO.class);
 
         return dto;
     }
@@ -116,7 +113,11 @@ public class OrderServiceImpl implements OrderService
                 "http://PRODUCT-SERVICE/product/" + order.getProductId(), ProductDTO.class
         );
 
-        OrderDTO setProductDetails = OrderDTO.builder().productDTO(ProductDTO.builder().productName(productDTO.getProductName()).productId(productDTO.getProductId()).build()).build();
+        OrderDTO setProductDetails = OrderDTO.builder()
+                .productDTO(ProductDTO.builder()
+                .productName(productDTO.getProductName())
+                .productId(productDTO.getProductId())
+                .build()).build();
 
         log.info("Invoking payment service to fetch the transaction details...");
 
@@ -125,7 +126,9 @@ public class OrderServiceImpl implements OrderService
         );
 
         OrderDTO setPaymentDetails = OrderDTO.builder().transactionDetails(TransactionDetails.builder()
+                .orderId(orderId)
                 .paymentId(transactionDetails.getPaymentId())
+                .totalAmount(order.getTotalAmount())
                 .paymentMode(transactionDetails.getPaymentMode())
                 .paymentDate(transactionDetails.getPaymentDate())
                 .referenceNumber(transactionDetails.getReferenceNumber())
@@ -136,6 +139,7 @@ public class OrderServiceImpl implements OrderService
                 .totalAmount(order.getTotalAmount())
                 .orderStatus(order.getOrderStatus())
                 .paymentMode(order.getPaymentMode())
+                .productId(order.getProductId())
                 .id(orderId)
                 .orderDate(order.getOrderDate())
                 .price(order.getPrice())

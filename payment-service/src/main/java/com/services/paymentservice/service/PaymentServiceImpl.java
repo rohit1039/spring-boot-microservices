@@ -28,9 +28,10 @@ public class PaymentServiceImpl implements PaymentService
     {
         log.info("Recording Transaction Details: {}", transactionDetails);
         Payment payment = Payment.builder()
-                .paymentMode(PaymentMode.CASH_ON_DELIVERY)
-                .paymentDate(Instant.now())
-                .paymentStatus("SUCCESS")
+                .paymentId(transactionDetails.getPaymentId())
+                .paymentMode(transactionDetails.getPaymentMode())
+                .paymentDate(transactionDetails.getPaymentDate())
+                .paymentStatus(transactionDetails.getPaymentStatus())
                 .orderId(transactionDetails.getOrderId())
                 .referenceNumber(transactionDetails.getReferenceNumber())
                 .totalAmount(transactionDetails.getTotalAmount())

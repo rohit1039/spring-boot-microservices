@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @CircuitBreaker(name = "external", fallbackMethod = "fallback")
-@FeignClient(url = "${product.service.url}", name = "${product.service.name}")
+@FeignClient(name = "PRODUCT-SERVICE")
 public interface ProductService
 {
     @PutMapping("/product/reduce-quantity/{productId}")

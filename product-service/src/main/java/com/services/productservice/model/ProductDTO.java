@@ -12,9 +12,7 @@ public class ProductDTO
     private Long productId;
     @NotEmpty(message = "Product name cannot be empty!")
     private String productName;
-    @PositiveOrZero
     private Double price;
-    @Positive
     private Long quantity;
 
 }

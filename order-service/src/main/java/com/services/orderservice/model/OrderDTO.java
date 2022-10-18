@@ -9,8 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Data
 @Builder
@@ -19,10 +18,10 @@ import java.time.LocalDateTime;
 public class OrderDTO
 {
     private long id;
+    private long productId;
     private Double price;
-    @NotNull
     private long quantity;
-    private LocalDateTime orderDate;
+    private Instant orderDate;
     private OrderStatus orderStatus;
     private PaymentMode paymentMode;
     private double totalAmount;

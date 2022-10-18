@@ -15,9 +15,7 @@ import com.services.orderservice.proxy.model.ProductDTO;
 import com.services.orderservice.proxy.model.TransactionDetails;
 import com.services.orderservice.service.OrderService;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -34,7 +32,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -49,6 +46,7 @@ import static org.springframework.util.StreamUtils.copyToString;
 @EnableConfigurationProperties
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = {OrderServiceConfig.class})
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class OrderControllerTest
 {
     @Autowired
@@ -120,29 +118,13 @@ public class OrderControllerTest
     private TransactionDetails getMockTransactionDetails()
     {
         return TransactionDetails.builder()
-                .orderId(getMockOrder().getId())
+                .orderId(1L)
                 .paymentId(1L)
                 .paymentMode(PaymentMode.CASH_ON_DELIVERY)
                 .paymentDate(Instant.now())
                 .paymentStatus("SUCCESS")
                 .totalAmount(160000D)
                 .referenceNumber(UUID.randomUUID().toString())
-                .build();
-
-    }
-
-    private OrderDTO getMockOrderDTO()
-    {
-        return OrderDTO.builder()
-                .id(1L)
-                .orderDate(LocalDateTime.now())
-                .paymentMode(getMockOrder().getPaymentMode())
-                .orderStatus(getMockOrder().getOrderStatus())
-                .price(getMockOrder().getPrice())
-                .quantity(getMockOrder().getQuantity())
-                .totalAmount(getMockOrder().getTotalAmount())
-                .transactionDetails(getMockTransactionDetails())
-                .productDTO(getMockProductDTO())
                 .build();
     }
 
@@ -156,29 +138,31 @@ public class OrderControllerTest
                 .build();
     }
 
-    private Order getMockOrder()
+    private OrderDTO getMockOrder()
     {
-        return Order.builder()
-                .orderStatus(OrderStatus.ORDER_PLACED)
-                .orderDate(LocalDateTime.now())
+        return OrderDTO.builder()
+                .orderStatus(OrderStatus.ORDER_CREATED)
+                .orderDate(Instant.now())
                 .price(45000D)
-                .paymentMode(PaymentMode.CASH_ON_DELIVERY)
                 .id(1L)
                 .quantity(2L)
                 .totalAmount(45000D * 2L)
-                .productId(2L)
+                .productId(1L)
+                .transactionDetails(getMockTransactionDetails())
+                .productDTO(getMockProductDTO())
                 .build();
     }
 
     @DisplayName("Place Order and Payment - Success Scenario")
     @Test
+    @org.junit.jupiter.api.Order(1)
     public void test_Place_Order_Do_Payment_Success() throws Exception
     {
         // get OrderDTO
-        OrderDTO orderDTO = getMockOrderDTO();
+        OrderDTO orderDTO = getMockOrder();
 
-        // call the placeOrder end point along with jwt
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/order/product/{productId}", 2L)
+        // call the placeOrder endpoint along with jwt
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/order/product/{productId}", 1L)
                         .with(jwt().authorities(new SimpleGrantedAuthority("Customer")))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(orderDTO)))
@@ -191,7 +175,7 @@ public class OrderControllerTest
         OrderDTO dto = objectMapper.readValue(result, OrderDTO.class);
 
         //check if the order saved in the database
-        Optional<Order> order = this.orderRepository.findById(dto.getId());
+        Optional<Order> order = this.orderRepository.findById(1L);
 
         assertTrue(order.isPresent());
 
@@ -206,13 +190,14 @@ public class OrderControllerTest
 
     @DisplayName("UnAuthorized - Failure Scenario")
     @Test
+    @org.junit.jupiter.api.Order(2)
     public void test_When_UnAuthorized_Throw403() throws Exception
     {
         // get OrderDTO
-        OrderDTO orderDTO = getMockOrderDTO();
+        OrderDTO orderDTO = getMockOrder();
 
         // call the placeOrder end point along with jwt but as Admin not Customer
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/order/product/{productId}", 2L)
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/order/product/{productId}", 1L)
                         .with(jwt().authorities(new SimpleGrantedAuthority("Admin")))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(orderDTO)))
@@ -224,7 +209,7 @@ public class OrderControllerTest
     public void test_GetOrderById_Success() throws Exception
     {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/order/get/1")
-                        .with(jwt().authorities(new SimpleGrantedAuthority("Admin")))
+                        .with(jwt().authorities(new SimpleGrantedAuthority("Customer")))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
@@ -232,22 +217,33 @@ public class OrderControllerTest
         String actualResponse = mvcResult.getResponse().getContentAsString();
 
         //read the response and set it to orderDTO class
-        OrderDTO actualDTO = objectMapper.readValue(actualResponse, OrderDTO.class);
+        OrderDTO actual = objectMapper.readValue(actualResponse, OrderDTO.class);
 
         //check order exist or not in database
         Order order = this.orderRepository.findById(1L).get();
 
-        //get expectedResponse
-        OrderDTO expectedDTO = getOrderResponse(order);
+        OrderDTO expected = getOrderResponse(order);
 
-        assertEquals(expectedDTO, actualDTO);
+        assertEquals(expected, actual);
+    }
+
+    @DisplayName("Get Order Details - Failure Scenario")
+    @Test
+    public void test_GetOrderById_Failed() throws Exception
+    {
+        MvcResult mvcResult
+                = mockMvc.perform(MockMvcRequestBuilders.get("/order/get/2")
+                        .with(jwt().authorities(new SimpleGrantedAuthority("Admin")))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andReturn();
     }
 
     private OrderDTO getOrderResponse(Order order) throws IOException
     {
         OrderDTO transactionDetails = OrderDTO.builder().transactionDetails(objectMapper.readValue(copyToString
-                (OrderControllerTest.class.getClassLoader().getResourceAsStream("mock/GetPayment.json")
-                        , defaultCharset()), TransactionDetails.class)).build();
+                (OrderControllerTest.class.getClassLoader().getResourceAsStream("mock/GetPayment.json"),
+                        defaultCharset()), TransactionDetails.class)).build();
 
         OrderDTO productDTO = OrderDTO.builder().productDTO(objectMapper.readValue(copyToString
                 (OrderControllerTest.class.getClassLoader().getResourceAsStream("mock/GetProduct.json"),
@@ -255,6 +251,10 @@ public class OrderControllerTest
 
         OrderDTO response = OrderDTO.builder()
                 .id(order.getId())
+                .productId(productDTO.getProductDTO().getProductId())
+                .price(order.getPrice())
+                .quantity(order.getQuantity())
+                .paymentMode(transactionDetails.getTransactionDetails().getPaymentMode())
                 .transactionDetails(transactionDetails.getTransactionDetails())
                 .productDTO(productDTO.getProductDTO())
                 .orderStatus(order.getOrderStatus())
@@ -264,6 +264,4 @@ public class OrderControllerTest
 
         return response;
     }
-
-
 }

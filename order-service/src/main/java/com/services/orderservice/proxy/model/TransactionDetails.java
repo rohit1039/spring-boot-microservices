@@ -1,6 +1,5 @@
 package com.services.orderservice.proxy.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.services.orderservice.entity.PaymentMode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
