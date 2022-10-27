@@ -6,7 +6,7 @@ spring:
     name: CLOUD-API-GATEWAY
 
   config:
-    import: configserver:http://localhost:9296
+    import: configserver:http://${CONFIG_DOCKER:localhost}:9296
 
   cloud:
     gateway:
@@ -59,5 +59,3 @@ okta:
     client-id: 0oa6rgp997HGkYeFp5d7
     client-secret: QP5ndwrapPIntx5vFgip7QUTmLt4N4qGSnZCSBoj
     scopes: openid, profile, email, offline_access
-
-
