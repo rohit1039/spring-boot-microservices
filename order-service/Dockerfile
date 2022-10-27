@@ -1,4 +1,4 @@
 FROM openjdk:11
-ADD target/cloud-api-gateway.jar cloud-api-gateway.jar
-ENTRYPOINT ["java","-jar","cloud-api-gateway.jar"]
-EXPOSE 9090
+ADD target/order-service.jar order-service.jar
+ENTRYPOINT ["java","-jar","order-service.jar"]
+EXPOSE 8081

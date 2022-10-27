@@ -1,4 +1,4 @@
 FROM openjdk:11
-ADD target/product-service.jar product-service.jar
-ENTRYPOINT ["java","-jar","product-service.jar"]
-EXPOSE 8080
+ADD target/payment-service.jar payment-service.jar
+ENTRYPOINT ["java","-jar","payment-service.jar"]
+EXPOSE 8082
