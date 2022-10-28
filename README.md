@@ -2,7 +2,7 @@
 
 ## 🛠️ Technologies & Tools used
 
-![](https://img.shields.io/badge/IntelliJ_IDEA-A93226?style=for-the-badge&logo=intellij-idea&logoColor=000000)
+![](https://img.shields.io/badge/IntelliJ_IDEA-A93226?style=for-the-badge&logo=intellij-idea&logoColor=white)
 &nbsp;
 ![JUnit5](https://img.shields.io/badge/JUnit5-F2F4F9?style=for-the-badge&logo=JUnit5&logoColor=25A162)
 &nbsp;
@@ -24,11 +24,13 @@
 
 ![Okta](/service-registry/diagrams/authentication_details.png)
 
+## 🦢 Docker in Action
+
+![Docker](/service-registry/diagrams/Docker.png)
+
 ## 🔮 Unit Testing with JUnit -> JUnit5
 
 - [x] Used Mockito and WireMock frameworks for testing the microservices.
 - [x] Wiremock provides a simulator for HTTP-based APIs.
 - [x] Mockito provides the mock implementation of the methods/objects.
 - [x] Used H2 in-memory database only for testcases.
-
-
