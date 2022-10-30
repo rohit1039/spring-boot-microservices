@@ -16,7 +16,7 @@
 &nbsp;
 ![](https://img.shields.io/badge/Kubernetes-F2F4F9?style=for-the-badge&logo=kubernetes&logoColor=326CE5)
 &nbsp;
-![](https://img.shields.io/badge/Jenkins-A93226?style=for-the-badge&logo=jenkins&logoColor=white)
+![](https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=white)
 
 ## 📄 Layout
 
